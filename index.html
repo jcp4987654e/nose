@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Eléctrica Profesional (v10 Estable)</title>
+    <title>Calculadora Eléctrica Profesional (v14 Estable)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -37,26 +37,26 @@
 
         <!-- Parte 1: Calculadora de Cortocircuito -->
         <div class="mb-12">
-            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 border-b pb-3">Parte 1: Análisis de Corriente de Cortocircuito</h2>
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 border-b pb-3">Parte 1: Análisis de Impedancia de Falla</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-xl shadow-md">
                     <form id="shortCircuitForm">
                         <div class="mb-6 pb-6 border-b border-gray-200">
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">1. Red de Distribución</h3>
-                            <div class="input-group"><label for="sccRed">Potencia de Cortocircuito de Red (Scc)</label><div class="flex items-center"><input type="number" id="sccRed" value="250" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">MVA</span></div></div>
-                            <div class="input-group"><label for="tensionRed">Tensión de la Red (L-L)</label><div class="flex items-center"><input type="number" id="tensionRed" value="13.2" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">kV</span></div></div>
+                            <div class="input-group"><label for="sccRed">Potencia de Cortocircuito de Red (Scc) [MVA]</label><input type="number" id="sccRed" value="250"></div>
+                            <div class="input-group"><label for="tensionRed">Tensión de la Red (L-L) [kV]</label><input type="number" id="tensionRed" value="13.2"></div>
                         </div>
                         <div class="mb-6 pb-6 border-b border-gray-200">
                             <h3 class="text-xl font-semibold mb-4 text-gray-800">2. Transformador MT/BT</h3>
-                            <div class="input-group"><label for="power">Potencia (S)</label><div class="flex items-center"><input type="number" id="power" value="630" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">kVA</span></div></div>
-                            <div class="input-group"><label for="voltage">Tensión Secundaria (L-L)</label><div class="flex items-center"><input type="number" id="voltage" value="400" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">V</span></div></div>
+                            <div class="input-group"><label for="power">Potencia (S) [kVA]</label><input type="number" id="power" value="630"></div>
+                            <div class="input-group"><label for="voltage">Tensión Secundaria (L-L) [V]</label><input type="number" id="voltage" value="400"></div>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="input-group"><label for="impedance">Ucc (%)</label><div class="flex items-center"><input type="number" id="impedance" value="4" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">%</span></div></div>
-                                <div class="input-group"><label for="Ur_percent">Ur (%)</label><div class="flex items-center"><input type="number" id="Ur_percent" value="1.1" placeholder="Ver tabla" class="rounded-r-none"><span class="inline-block bg-gray-200 p-[13px] border border-l-0 border-gray-300 rounded-r-lg text-sm">%</span></div></div>
+                                <div class="input-group"><label for="impedance">Ucc (%)</label><input type="number" id="impedance" value="4"></div>
+                                <div class="input-group"><label for="Ur_percent">Ur (%)</label><input type="number" id="Ur_percent" value="1.1" placeholder="Ver tabla"></div>
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-xl font-semibold mb-4 text-gray-800">3. Tramos de Cable en Baja Tensión</h3>
+                            <h3 class="text-xl font-semibold mb-4 text-gray-800">3. Tramos de Cable en Baja Tensión (Línea Principal)</h3>
                             <div id="cableSectionsContainerSC"></div>
                             <div class="mt-4 flex space-x-4">
                                 <button type="button" id="addCableSectionBtn" class="btn bg-blue-600 hover:bg-blue-700 text-white w-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>Agregar Tramo</button>
@@ -74,10 +74,10 @@
         </div>
 
         <div class="mt-12 pt-8 border-t-2 border-gray-300">
-             <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Parte 2: Dimensionamiento de Circuitos</h2>
+             <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Parte 2: Verificación de Conductores</h2>
             <div class="bg-white p-6 rounded-xl shadow-md">
                 <div id="circuitsContainer"></div>
-                <div class="mt-6"><button type="button" id="addCircuitBtn" class="btn btn-primary w-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>Agregar Circuito</button></div>
+                <div class="mt-6"><button type="button" id="addCircuitBtn" class="btn btn-primary w-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>Agregar Circuito / Tramo</button></div>
             </div>
              <div class="mt-8 flex justify-end"> <button id="exportDimBtn" class="btn bg-green-600 hover:bg-green-700 text-white text-sm py-2 px-3">Exportar Resultados a Excel</button></div>
             <div id="sectionResultsContainer" class="mt-2"></div>
@@ -166,7 +166,7 @@
                 sectionDiv.className = 'border border-gray-200 p-4 rounded-lg mb-4';
                 sectionDiv.id = id;
                 let sectionOptions = CONSTS.CABLE_SECTIONS.filter(s => parseFloat(s) >= 10).map(s => `<option value="${s}" ${s === "95" ? "selected" : ""}>${s} mm²</option>`).join('');
-                sectionDiv.innerHTML = `<div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-700">Tramo de BT #${container.children.length + 1}</h4><button type="button" class="text-red-500 hover:text-red-700 remove-btn font-bold text-xl" data-target="${id}">&times;</button></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4"><div class="input-group"><label>Material</label><select class="cable-material-sc"><option value="cobre" selected>Cobre</option><option value="aluminio">Aluminio</option></select></div><div class="input-group"><label>Aislación</label><select class="cable-insulation-sc"><option value="pvc" selected>PVC (70°C)</option><option value="xlpe">XLPE (90°C)</option></select></div></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4"><div class="input-group"><label>Longitud (m)</label><input type="number" value="20" class="cable-length-sc" min="0"></div><div class="input-group"><label>Sección</label><select class="cable-section-area-sc">${sectionOptions}</select></div><div class="input-group"><label>Tipo</label><select class="cable-type-sc"><option value="tripolar" selected>Tripolar</option><option value="unipolar">3 Unipolares</option></select></div></div>`;
+                sectionDiv.innerHTML = `<div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-700">Tramo de BT #${container.children.length + 1}</h4><button type="button" class="text-red-500 hover:text-red-700 remove-btn font-bold text-xl" data-target="${id}">&times;</button></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4"><div class="input-group"><label>Material</label><select class="cable-material-sc"><option value="cobre" selected>Cobre</option><option value="aluminio">Aluminio</option></select></div><div class="input-group"><label>Aislación</label><select class="cable-insulation-sc"><option value="pvc" selected>PVC (70°C)</option><option value="xlpe">XLPE (90°C)</option></select></div></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4"><div class="input-group"><label>Longitud [m]</label><input type="number" value="20" class="cable-length-sc" min="0"></div><div class="input-group"><label>Sección</label><select class="cable-section-area-sc">${sectionOptions}</select></div><div class="input-group"><label>Tipo</label><select class="cable-type-sc"><option value="tripolar" selected>Tripolar</option><option value="unipolar">3 Unipolares</option></select></div></div>`;
                 container.appendChild(sectionDiv);
             }
 
@@ -234,7 +234,8 @@
                 const resultDiv = document.createElement('div');
                 resultDiv.className = 'result-card';
                 resultDiv.dataset.point = pointName;
-                resultDiv.innerHTML = `<h4 class="text-lg font-semibold text-blue-600 mb-3">${pointName}</h4><div class="result-item"><span>Icc Trifásica (Icc):</span><span class="font-bold text-xl text-red-600">${(Icc3 / 1000).toFixed(2)} kA</span></div><div class="result-item"><span>Corriente de Impulso (Is):</span><span class="font-bold text-xl text-purple-600">${(Is / 1000).toFixed(2)} kA</span></div><div class="result-item text-sm text-gray-600"><span>Impedancia Total (Z):</span><span>${Z_total.toFixed(5)} Ω</span></div><div class="result-item text-sm text-gray-600"><span>Resistencia Total (R):</span><span>${R_total.toFixed(5)} Ω</span></div><div class="result-item text-sm text-gray-600"><span>Reactancia Total (X):</span><span>${X_total.toFixed(5)} Ω</span></div><div class="result-item text-sm text-gray-600"><span>Relación R/X:</span><span>${(R_total/X_total).toFixed(3)}</span></div><div class="result-item text-sm text-gray-600"><span>Factor (χ):</span><span>${kappa.toFixed(3)}</span></div>`;
+                resultDiv.dataset.log = `Cálculo para ${pointName}:\nZ_red=${(Z_total-R_total).toFixed(5)}Ω, R_total=${R_total.toFixed(5)}Ω, X_total=${X_total.toFixed(5)}Ω`;
+                resultDiv.innerHTML = `<h4 class="text-lg font-semibold text-blue-600 mb-3">${pointName}</h4><div class="result-item"><span>Icc Trifásica (Icc):</span><span class="font-bold text-xl text-red-600">${(Icc3 / 1000).toFixed(2)} kA</span></div><div class="result-item"><span>Corriente de Impulso (Is):</span><span class="font-bold text-xl text-purple-600">${(Is / 1000).toFixed(2)} kA</span></div><details class="mt-2 text-sm"><summary>Ver detalles de impedancia</summary><div class="log-box">Z_total: ${Z_total.toFixed(5)} Ω<br>R_total: ${R_total.toFixed(5)} Ω<br>X_total: ${X_total.toFixed(5)} Ω<br>R/X: ${(R_total/X_total).toFixed(3)}<br>Factor χ: ${kappa.toFixed(3)}</div></details>`;
                 getById('resultsContentSC').appendChild(resultDiv);
             }
 
@@ -246,7 +247,7 @@
                 const circuitDiv = document.createElement('div');
                 circuitDiv.className = 'circuit-block border border-gray-300 p-4 rounded-lg mb-4';
                 circuitDiv.id = id;
-                circuitDiv.innerHTML = `<div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-700">Circuito de Carga #${container.children.length + 1}</h4><button type="button" class="text-red-500 hover:text-red-700 remove-btn font-bold text-xl" data-target="${id}">&times;</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="input-group"><label>Tipo Circuito</label><select class="circuit-type"><option value="IUG">IUG</option><option value="TUG">TUG</option><option value="TUE">TUE</option><option value="CUSTOM" selected>Específico</option></select></div><div class="input-group"><label>Dato Entrada</label><select class="input-type"><option value="power" selected>Potencia (VA)</option><option value="current">Corriente (A)</option></select></div><div class="input-group power-input-group"><label>Potencia (S)</label><input type="number" class="circuit-power"></div><div class="input-group current-input-group hidden"><label>Corriente (Ib)</label><input type="number" class="circuit-current"></div><div class="input-group"><label>cos φ</label><input type="number" class="circuit-pf" value="0.85" step="0.01"></div><div class="input-group"><label>Sistema</label><select class="circuit-system"><option value="monofasico" selected>Monofásico</option><option value="trifasico">Trifásico</option></select></div><div class="input-group"><label>Material</label><select class="circuit-material"><option value="cobre" selected>Cobre</option><option value="aluminio">Aluminio</option></select></div><div class="input-group"><label>Aislación</label><select class="circuit-insulation"><option value="pvc" selected>PVC</option><option value="xlpe">XLPE</option></select></div><div class="input-group"><label>Longitud (m)</label><input type="number" value="20" class="circuit-length"></div><div class="input-group"><label>ΔV% Máx.</label><input type="number" value="3" class="circuit-max-dv"></div><div class="input-group"><label>Temp. Ambiente (°C)</label><input type="number" value="30" class="circuit-temp"></div><div class="input-group"><label>Circuitos Agrupados</label><input type="number" value="1" class="circuit-group"></div><div class="input-group"><label>Tiempo Despeje (s)</label><input type="number" value="0.1" step="0.01" class="circuit-tcc"></div></div>`;
+                circuitDiv.innerHTML = `<div class="flex justify-between items-center mb-2"><h4 class="font-semibold text-gray-700">Circuito / Tramo #${container.children.length + 1}</h4><button type="button" class="text-red-500 hover:text-red-700 remove-btn font-bold text-xl" data-target="${id}">&times;</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="input-group"><label>Tipo Circuito</label><select class="circuit-type"><option value="IUG">IUG</option><option value="TUG">TUG</option><option value="TUE">TUE</option><option value="CUSTOM" selected>Específico</option></select></div><div class="input-group"><label>Dato Entrada</label><select class="input-type"><option value="power" selected>Potencia (VA)</option><option value="current">Corriente (A)</option></select></div><div class="input-group power-input-group"><label>Potencia (S) [VA]</label><input type="number" class="circuit-power"></div><div class="input-group current-input-group hidden"><label>Corriente (Ib) [A]</label><input type="number" class="circuit-current"></div><div class="input-group"><label>cos φ</label><input type="number" class="circuit-pf" value="0.85" step="0.01"></div><div class="input-group"><label>Sistema</label><select class="circuit-system"><option value="monofasico" selected>Monofásico</option><option value="trifasico">Trifásico</option></select></div><div class="input-group"><label>Material</label><select class="circuit-material"><option value="cobre" selected>Cobre</option><option value="aluminio">Aluminio</option></select></div><div class="input-group"><label>Aislación</label><select class="circuit-insulation"><option value="pvc" selected>PVC</option><option value="xlpe">XLPE</option></select></div><div class="input-group"><label>Longitud [m]</label><input type="number" value="20" class="circuit-length"></div><div class="input-group"><label>ΔV% Máx.</label><input type="number" value="3" class="circuit-max-dv"></div><div class="input-group"><label>Temp. Ambiente [°C]</label><input type="number" value="30" class="circuit-temp"></div><div class="input-group"><label>Circuitos Agrupados</label><input type="number" value="1" class="circuit-group"></div><div class="input-group"><label>Tiempo Despeje [s]</label><input type="number" value="0.1" step="0.01" class="circuit-tcc"></div></div>`;
                 container.appendChild(circuitDiv);
                 updateCircuitPreset(circuitDiv.querySelector('.circuit-type'));
             }
@@ -275,7 +276,7 @@
                 getById('sectionResultsContainer').innerHTML = '';
                 getById('circuitsContainer').querySelectorAll('.circuit-block').forEach((block, index) => {
                     const data = {
-                        title: `Circuito de Carga #${index + 1}`,
+                        title: `Circuito / Tramo #${index + 1}`,
                         inputType: block.querySelector('.input-type').value,
                         S_va: parseFloat(block.querySelector('.circuit-power').value) || 0,
                         Ib_in: parseFloat(block.querySelector('.circuit-current').value) || 0,
@@ -310,43 +311,50 @@
                     for (const section of CONSTS.CABLE_SECTIONS) {
                         const iTabla = ampacityTable[section] || 0;
                         const iz = iTabla * data.k1 * data.k2;
-                        if (iz >= data.Ib) { sectionByIz = section; data.log.push(`&nbsp;&nbsp;Sección ${section}mm²: Iz=${iz.toFixed(2)}A. OK.`); break; }
+                        if (iz >= data.Ib) { sectionByIz = section; data.log.push(`&nbsp;&nbsp;Sección ${section}mm²: Iz=${iz.toFixed(2)}A >= ${data.Ib.toFixed(2)}A. OK.`); break; }
                     }
 
-                    if (!sectionByIz) { /* error handling */ return; }
+                    if (!sectionByIz) { data.log.push("Error: Corriente de proyecto muy alta."); displaySectionResult(data); return; }
                     data.log.push(`&nbsp;&nbsp;Sección inicial por Iz: <strong>${sectionByIz}mm²</strong>`);
 
                     data.log.push(`3. Verificación Caída de Tensión (ΔV%)`);
-                    let finalSection = sectionByIz;
+                    let sectionAfterDV = sectionByIz;
                     while(true) {
-                        const r_km = CONSTS.CABLE_RESISTANCE[data.material][data.insulation][finalSection] || 0;
-                        const x_km = CONSTS.CABLE_REACTANCE.tripolar[finalSection] || 0; 
+                        const r_km = CONSTS.CABLE_RESISTANCE[data.material][data.insulation][sectionAfterDV] || 0;
+                        const x_km = CONSTS.CABLE_REACTANCE.tripolar[sectionAfterDV] || 0; 
                         const dv_factor = data.system === 'trifasico' ? Math.sqrt(3) : 2;
                         data.dv_percent = (dv_factor * (data.L_m/1000) * data.Ib * (r_km*data.cosPhi + x_km*Math.sqrt(1-data.cosPhi**2)) / data.V) * 100;
-                        data.log.push(`&nbsp;&nbsp;Verificando ${finalSection}mm² -> ΔV% = ${data.dv_percent.toFixed(2)}%`);
+                        data.log.push(`&nbsp;&nbsp;Verificando ${sectionAfterDV}mm² -> ΔV% = ${data.dv_percent.toFixed(2)}%`);
                         if (data.dv_percent > data.maxDV_percent) {
-                            const currentIndex = CONSTS.CABLE_SECTIONS.indexOf(finalSection);
-                            if (currentIndex + 1 < CONSTS.CABLE_SECTIONS.length) { finalSection = CONSTS.CABLE_SECTIONS[currentIndex + 1]; } else { finalSection = "Error"; break; }
-                        } else { break; }
+                            data.log.push(`&nbsp;&nbsp;<span style="color:red;">FALLA. > ${data.maxDV_percent}%.</span> Aumentando sección...`);
+                            const currentIndex = CONSTS.CABLE_SECTIONS.indexOf(sectionAfterDV);
+                            if (currentIndex + 1 < CONSTS.CABLE_SECTIONS.length) { sectionAfterDV = CONSTS.CABLE_SECTIONS[currentIndex + 1]; } else { sectionAfterDV = "Error"; break; }
+                        } else { data.log.push(`&nbsp;&nbsp;<span style="color:green;">OK.</span>`); break; }
                     }
-                    data.finalSection = finalSection;
-                    data.log.push(`&nbsp;&nbsp;Sección por ΔV: <strong>${finalSection}mm²</strong>`);
-
+                    if(sectionAfterDV !== sectionByIz) data.log.push(`&nbsp;&nbsp;Sección post-ΔV: <strong>${sectionAfterDV}mm²</strong>`);
+                    
                     data.log.push(`4. Verificación Cortocircuito`);
-                    if (data.finalSection !== "Error") {
-                        const L_km = data.L_m / 1000;
-                        const R_cable_falla = (CONSTS.CABLE_RESISTANCE[data.material][data.insulation][data.finalSection] || 0) * L_km;
-                        const X_cable_falla = (CONSTS.CABLE_REACTANCE.tripolar[data.finalSection] || 0) * L_km;
+                    let finalSection = sectionAfterDV;
+                    while (true) {
+                        if (finalSection === "Error") { data.cc_check_ok = false; break; }
+                        const R_cable_falla = (CONSTS.CABLE_RESISTANCE[data.material][data.insulation][finalSection] || 0) * (data.L_m / 1000);
+                        const X_cable_falla = (CONSTS.CABLE_REACTANCE.tripolar[finalSection] || 0) * (data.L_m / 1000);
                         const Z_falla_total = Math.sqrt((lastSCImpedances.R + R_cable_falla)**2 + (lastSCImpedances.X + X_cable_falla)**2);
                         data.Icc_falla = (getById('voltage').value || 400) / (Math.sqrt(3) * Z_falla_total);
                         
                         const k_cc = CONSTS.K_FACTOR_CC[data.insulation][data.material];
-                        data.Iadm_cc = (k_cc * parseFloat(data.finalSection)) / Math.sqrt(data.t_cc);
-
-                        data.log.push(`&nbsp;&nbsp;Icc Falla = <strong>${(data.Icc_falla / 1000).toFixed(2)} kA</strong>`);
-                        data.log.push(`&nbsp;&nbsp;Iadm_cc = <strong>${(data.Iadm_cc/1000).toFixed(2)} kA</strong>`);
+                        data.Iadm_cc = (k_cc * parseFloat(finalSection)) / Math.sqrt(data.t_cc);
                         data.cc_check_ok = data.Iadm_cc > data.Icc_falla;
+                        
+                        data.log.push(`&nbsp;&nbsp;Verificando ${finalSection}mm² -> Iadm_cc=${(data.Iadm_cc/1000).toFixed(2)}kA vs Icc_falla=${(data.Icc_falla/1000).toFixed(2)}kA`);
+                        if(!data.cc_check_ok) {
+                            data.log.push(`&nbsp;&nbsp;<span style="color:red;">FALLA.</span> Aumentando sección...`);
+                            const currentIndex = CONSTS.CABLE_SECTIONS.indexOf(finalSection);
+                            if (currentIndex + 1 < CONSTS.CABLE_SECTIONS.length) { finalSection = CONSTS.CABLE_SECTIONS[currentIndex + 1]; } else { finalSection = "Error"; break; }
+                        } else { data.log.push(`&nbsp;&nbsp;<span style="color:green;">OK.</span>`); break; }
                     }
+                    data.finalSection = finalSection;
+                    data.log.push(`&nbsp;&nbsp;Sección final post-Icc: <strong>${finalSection}mm²</strong>`);
                     displaySectionResult(data);
                 });
             }
@@ -420,12 +428,12 @@
                 if (event.target.classList.contains('input-type')) toggleInputType(event.target);
             });
              document.body.addEventListener('input', event => {
+                if (event.target.closest('#shortCircuitForm')) runAllCalculations();
                 if (event.target.closest('.circuit-block')) calculateAllSections();
             });
 
             function init() {
                 populateReferenceTables();
-                getById('shortCircuitForm').addEventListener('input', runAllCalculations);
                 getById('addCableSectionBtn').addEventListener('click', addCableSection);
                 getById('resetButtonSC').addEventListener('click', resetAllSC);
                 getById('addCircuitBtn').addEventListener('click', addCircuit);
