@@ -12,40 +12,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 220px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -110px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
         .result-line {
             display: flex;
             justify-content: space-between;
@@ -73,6 +39,8 @@
             color: #3b82f6;
             font-weight: 600;
         }
+        .ok-icon { color: #22c55e; }
+        .fail-icon { color: #ef4444; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -83,96 +51,64 @@
             <p class="text-md text-gray-600 mt-2">Basada en Normas IRAM y Reglamentación AEA 90364</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            
-            <!-- CALCULADORA 1: SELECCIÓN DE CONDUCTOR -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-2 text-blue-700">1. Selección de Conductor</h2>
-                <p class="text-sm text-gray-500 mb-6">Calcule la sección del cable y añádalo a la lista de proyecto.</p>
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+            <h2 class="text-2xl font-bold mb-2 text-blue-700">1. Definición y Cálculo de Circuito</h2>
+            <p class="text-sm text-gray-500 mb-6">Complete todos los datos para realizar un cálculo integral (Icc, Icarga y ΔU) y añadir el circuito a la lista.</p>
 
-                <!-- Inputs -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Datos de la Carga</h3>
-                        <div class="space-y-4">
-                            <div><label for="potencia" class="block text-sm font-medium">Potencia (kW)</label><input type="number" id="potencia" value="5" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                            <div><label for="tension" class="block text-sm font-medium">Tensión (V)</label><select id="tension" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="220">220 V (Mono)</option><option value="380" selected>380 V (Tri)</option></select></div>
-                            <div><label for="cosphi" class="block text-sm font-medium">Factor de Potencia (cos φ)</label><input type="number" id="cosphi" value="0.9" step="0.01" min="0" max="1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Instalación</h3>
-                        <div class="space-y-4">
-                            <div><label for="longitud" class="block text-sm font-medium">Longitud (m)</label><input type="number" id="longitud" value="50" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                            <div><label for="tipoCable" class="block text-sm font-medium">Tipo de Cable</label><select id="tipoCable" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="IRAM 2178-XLPE-Cu" selected>IRAM 2178 (XLPE/Cu)</option><option value="IRAM 2178-PVC-Cu">IRAM 2178 (PVC/Cu)</option><option value="IRAM 247-PVC-Cu">IRAM 247-3 (PVC/Cu)</option><option value="IRAM 2178-XLPE-Al">IRAM 2178 (XLPE/Al)</option><option value="IRAM 2178-PVC-Al">IRAM 2178 (PVC/Al)</option></select></div>
-                            <div><label for="tipoTendido" class="block text-sm font-medium">Tipo de Tendido</label><select id="tipoTendido" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="B1">B1/B2 (Cañería)</option><option value="C" selected>C (Bandeja no perf.)</option><option value="E">E/F (Bandeja perf.)</option></select></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Factores</h3>
-                         <div class="space-y-4">
-                             <div><label for="temperatura" class="block text-sm font-medium">Temp. Ambiente (°C)</label><input type="number" id="temperatura" value="40" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                             <div><label for="agrupamiento" class="block text-sm font-medium">Nº Circuitos Agrupados</label><input type="number" id="agrupamiento" value="1" min="1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                         </div>
-                    </div>
-                     <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Proyecto</h3>
-                        <div class="space-y-4">
-                           <div><label for="caidaTensionAdm" class="block text-sm font-medium">ΔU Admisible (%)</label><select id="caidaTensionAdm" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="3">3% (Ilum.)</option><option value="5" selected>5% (F. Motriz)</option><option value="15">15% (Arranque)</option></select></div>
-                           <div><label for="nombreCircuito" class="block text-sm font-medium">Nombre del Circuito</label><input type="text" id="nombreCircuito" placeholder="Ej: Bomba Piscina" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
-                        </div>
+            <!-- Inputs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Columna 1 -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Datos de la Carga</h3>
+                    <div class="space-y-4">
+                        <div><label for="potencia" class="block text-sm font-medium">Potencia (kW)</label><input type="number" id="potencia" value="5" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                        <div><label for="tension" class="block text-sm font-medium">Tensión (V)</label><select id="tension" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="220">220 V (Mono)</option><option value="380" selected>380 V (Tri)</option></select></div>
+                        <div><label for="cosphi" class="block text-sm font-medium">Factor de Potencia (cos φ)</label><input type="number" id="cosphi" value="0.9" step="0.01" min="0" max="1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
                     </div>
                 </div>
-
-                <!-- Botón de cálculo -->
-                <div class="flex justify-end gap-4">
-                    <button id="add-circuit" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Calcular y Añadir a la Lista</button>
+                <!-- Columna 2 -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Instalación</h3>
+                    <div class="space-y-4">
+                        <div><label for="longitud" class="block text-sm font-medium">Longitud (m)</label><input type="number" id="longitud" value="50" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                        <div><label for="tipoCable" class="block text-sm font-medium">Tipo de Cable</label><select id="tipoCable" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="IRAM 2178-XLPE-Cu" selected>IRAM 2178 (XLPE/Cu)</option><option value="IRAM 2178-PVC-Cu">IRAM 2178 (PVC/Cu)</option><option value="IRAM 247-PVC-Cu">IRAM 247-3 (PVC/Cu)</option><option value="IRAM 2178-XLPE-Al">IRAM 2178 (XLPE/Al)</option><option value="IRAM 2178-PVC-Al">IRAM 2178 (PVC/Al)</option></select></div>
+                        <div><label for="tipoTendido" class="block text-sm font-medium">Tipo de Tendido</label><select id="tipoTendido" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="B1">B1/B2 (Cañería)</option><option value="C" selected>C (Bandeja no perf.)</option><option value="E">E/F (Bandeja perf.)</option></select></div>
+                    </div>
                 </div>
-                
-                <!-- Resultado inmediato -->
-                <div id="resultado-cable" class="mt-6 hidden">
-                     <h3 class="text-lg font-semibold mb-2 text-gray-800 border-t pt-4">Resultado del Cálculo Actual</h3>
-                     <div id="loader-cable" class="flex justify-center items-center p-4 hidden"><div class="loader"></div></div>
-                     <div id="content-resultado-cable" class="bg-blue-50 p-4 rounded-lg"></div>
+                <!-- Columna 3 -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Factores y Falla</h3>
+                     <div class="space-y-4">
+                         <div><label for="temperatura" class="block text-sm font-medium">Temp. Ambiente (°C)</label><input type="number" id="temperatura" value="40" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                         <div><label for="agrupamiento" class="block text-sm font-medium">Nº Circuitos Agrupados</label><input type="number" id="agrupamiento" value="1" min="1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                         <div><label for="icc" class="block text-sm font-medium">Icc a Soportar (kA)</label><input type="number" id="icc" value="10" step="0.1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                     </div>
+                </div>
+                <!-- Columna 4 -->
+                 <div>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Proyecto</h3>
+                    <div class="space-y-4">
+                       <div><label for="tiempoActuacion" class="block text-sm font-medium">Tiempo Protección (s)</label><input type="number" id="tiempoActuacion" value="0.1" step="0.01" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                       <div><label for="caidaTensionAdm" class="block text-sm font-medium">ΔU Admisible (%)</label><select id="caidaTensionAdm" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="3">3% (Ilum.)</option><option value="5" selected>5% (F. Motriz)</option><option value="15">15% (Arranque)</option></select></div>
+                       <div><label for="nombreCircuito" class="block text-sm font-medium">Nombre del Circuito</label><input type="text" id="nombreCircuito" placeholder="Ej: Bomba Piscina" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- CALCULADORA 2: VERIFICACIÓN POR CORTOCIRCUITO -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-2 text-green-700">2. Verificación por Cortocircuito</h2>
-                <p class="text-sm text-gray-500 mb-6">Verifique si el cable calculado soporta la Icc máxima.</p>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Datos del Cable (auto)</h3>
-                        <div class="space-y-4">
-                             <div><label for="seccionVerificar" class="block text-sm font-medium">Sección a Verificar (mm²)</label><input type="text" id="seccionVerificar" placeholder="Desde Calc. 1" class="mt-1 block w-full bg-gray-200 border-gray-300 rounded-md shadow-sm py-2 px-3" readonly></div>
-                             <div><label for="aislacionVerificar" class="block text-sm font-medium">Aislación</label><input type="text" id="aislacionVerificar" placeholder="Desde Calc. 1" class="mt-1 block w-full bg-gray-200 border-gray-300 rounded-md shadow-sm py-2 px-3" readonly></div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold mb-2 border-b pb-1 text-gray-700">Datos de la Falla (manual)</h3>
-                        <div class="space-y-4">
-                            <div><label for="icc" class="block text-sm font-medium">Corriente de Cortocircuito, Icc (kA)</label><input type="number" id="icc" value="10" step="0.1" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"></div>
-                             <div><label for="tiempoActuacion" class="block text-sm font-medium">Tiempo Protección (s)</label><input type="number" id="tiempoActuacion" value="0.1" step="0.01" class="mt-1 block w-full bg-gray-50 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex justify-end gap-4">
-                    <button id="verificar-icc" class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">Verificar Icc</button>
-                </div>
-
-                <div id="resultado-icc" class="mt-6 hidden">
-                    <h3 class="text-lg font-semibold mb-2 text-gray-800 border-t pt-4">Resultado de Verificación</h3>
-                    <div id="content-resultado-icc" class="p-4 rounded-lg"></div>
-                </div>
+            <div class="flex justify-end gap-4 border-t pt-4">
+                <button id="add-circuit" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Calcular y Añadir a la Lista</button>
+            </div>
+            
+            <div id="resultado-cable" class="mt-6 hidden">
+                 <h3 class="text-lg font-semibold mb-2 text-gray-800 border-t pt-4">Resultado del Cálculo</h3>
+                 <div id="loader-cable" class="flex justify-center items-center p-4 hidden"><div class="loader"></div></div>
+                 <div id="content-resultado-cable" class="bg-blue-50 p-4 rounded-lg"></div>
             </div>
         </div>
 
-        <!-- SECCIÓN DE CIRCUITOS CALCULADOS -->
         <div class="mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-                <h2 class="text-2xl font-bold text-gray-800">3. Lista de Circuitos del Proyecto</h2>
+                <h2 class="text-2xl font-bold text-gray-800">2. Lista de Circuitos del Proyecto</h2>
                 <div class="flex gap-2">
                     <button id="export-csv" class="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Exportar a Excel (.csv)</button>
                     <button id="clear-list" class="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-red-700">Limpiar Lista</button>
@@ -183,9 +119,8 @@
             </div>
         </div>
 
-        <!-- ANEXOS Y TABLAS -->
         <div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">4. Anexos y Tablas de Referencia</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">3. Anexos y Tablas de Referencia</h2>
             <div class="bg-white p-6 rounded-xl shadow-lg">
                 <div class="border-b border-gray-200">
                     <nav class="-mb-px flex space-x-6 overflow-x-auto" id="tab-container">
@@ -200,7 +135,6 @@
         </div>
     </div>
     
-    <!-- TEMPLATE PARA LA TARJETA DE CIRCUITO EN LA LISTA -->
     <template id="circuit-card-template">
         <div class="bg-white p-4 rounded-lg shadow-md border-l-4">
             <div class="flex justify-between items-start">
@@ -220,7 +154,6 @@
     </template>
     
     <script>
-    // --- DATABASE ---
     const cableData = {'IRAM 2178-XLPE-Cu':{aislacion:'XLPE',material:'Cu',k_icc:143,resistencias:[{s:1.5,r:16.96,x:.115},{s:2.5,r:10.18,x:.115},{s:4,r:6.31,x:.115},{s:6,r:4.21,x:.107},{s:10,r:2.44,x:.107},{s:16,r:1.54,x:.1},{s:25,r:.995,x:.1},{s:35,r:.707,x:.095},{s:50,r:.493,x:.091},{s:70,r:.348,x:.086},{s:95,r:.264,x:.083},{s:120,r:.207,x:.081},{s:150,r:.167,x:.079},{s:185,r:.138,x:.079},{s:240,r:.106,x:.076}],corrientes:{B1:{mono:[{s:1.5,i:20},{s:2.5,i:27},{s:4,i:36},{s:6,i:46},{s:10,i:63},{s:16,i:83},{s:25,i:108},{s:35,i:133},{s:50,i:159},{s:70,i:201},{s:95,i:241},{s:120,i:278},{s:150,i:304},{s:185,i:349},{s:240,i:418}],tri:[{s:1.5,i:18},{s:2.5,i:24},{s:4,i:32},{s:6,i:40},{s:10,i:55},{s:16,i:73},{s:25,i:96},{s:35,i:116},{s:50,i:140},{s:70,i:177},{s:95,i:212},{s:120,i:244},{s:150,i:273},{s:185,i:309},{s:240,i:362}]},C:{mono:[{s:1.5,i:22},{s:2.5,i:30},{s:4,i:41},{s:6,i:53},{s:10,i:71},{s:16,i:97},{s:25,i:126},{s:35,i:156},{s:50,i:190},{s:70,i:245},{s:95,i:298},{s:120,i:348},{s:150,i:401},{s:185,i:460},{s:240,i:545}],tri:[{s:1.5,i:20},{s:2.5,i:27},{s:4,i:36},{s:6,i:47},{s:10,i:65},{s:16,i:87},{s:25,i:108},{s:35,i:134},{s:50,i:163},{s:70,i:208},{s:95,i:253},{s:120,i:293},{s:150,i:338},{s:185,i:386},{s:240,i:455}]},E:{mono:[{s:1.5,i:24},{s:2.5,i:33},{s:4,i:45},{s:6,i:57},{s:10,i:78},{s:16,i:105},{s:25,i:136},{s:35,i:168},{s:50,i:205},{s:70,i:263},{s:95,i:320},{s:120,i:373},{s:150,i:430},{s:185,i:493},{s:240,i:583}],tri:[{s:1.5,i:21},{s:2.5,i:29},{s:4,i:38},{s:6,i:49},{s:10,i:68},{s:16,i:91},{s:25,i:116},{s:35,i:144},{s:50,i:175},{s:70,i:224},{s:95,i:271},{s:120,i:315},{s:150,i:363},{s:185,i:415},{s:240,i:490}]}}},
     'IRAM 2178-PVC-Cu':{aislacion:'PVC',material:'Cu',k_icc:115,resistencias:[{s:1.5,r:15.91,x:.115},{s:2.5,r:9.55,x:.115},{s:4,r:5.92,x:.115},{s:6,r:3.95,x:.107},{s:10,r:2.29,x:.107},{s:16,r:1.48,x:.1},{s:25,r:.934,x:.1},{s:35,r:.663,x:.095},{s:50,r:.463,x:.091},{s:70,r:.326,x:.086},{s:95,r:.248,x:.083},{s:120,r:.195,x:.081},{s:150,r:.157,x:.079},{s:185,r:.13,x:.079},{s:240,r:.1,x:.076}],corrientes:{B1:{mono:[{s:1.5,i:14},{s:2.5,i:20},{s:4,i:26},{s:6,i:33},{s:10,i:45},{s:16,i:60},{s:25,i:78},{s:35,i:97},{s:50,i:116},{s:70,i:146},{s:95,i:175},{s:120,i:202},{s:150,i:224},{s:185,i:256},{s:240,i:299}],tri:[{s:1.5,i:13},{s:2.5,i:17},{s:4,i:23},{s:6,i:30},{s:10,i:40},{s:16,i:54},{s:25,i:70},{s:35,i:86},{s:50,i:103},{s:70,i:130},{s:95,i:156},{s:120,i:179},{s:150,i:196},{s:185,i:222},{s:240,i:258}]},C:{mono:[{s:1.5,i:17},{s:2.5,i:23},{s:4,i:31},{s:6,i:40},{s:10,i:55},{s:16,i:74},{s:25,i:97},{s:35,i:120},{s:50,i:146},{s:70,i:185},{s:95,i:224},{s:120,i:260},{s:150,i:299},{s:185,i:341},{s:240,i:401}],tri:[{s:1.5,i:15},{s:2.5,i:21},{s:4,i:28},{s:6,i:36},{s:10,i:50},{s:16,i:66},{s:25,i:84},{s:35,i:104},{s:50,i:125},{s:70,i:160},{s:95,i:194},{s:120,i:225},{s:150,i:260},{s:185,i:297},{s:240,i:351}]},E:{mono:[{s:1.5,i:19},{s:2.5,i:26},{s:4,i:35},{s:6,i:44},{s:10,i:61},{s:16,i:82},{s:25,i:104},{s:35,i:129},{s:50,i:157},{s:70,i:202},{s:95,i:245},{s:120,i:285},{s:150,i:330},{s:185,i:378},{s:240,i:447}],tri:[{s:1.5,i:16},{s:2.5,i:22},{s:4,i:30},{s:6,i:37},{s:10,i:52},{s:16,i:70},{s:25,i:88},{s:35,i:110},{s:50,i:133},{s:70,i:171},{s:95,i:207},{s:120,i:240},{s:150,i:278},{s:185,i:317},{s:240,i:374}]}}},
     'IRAM 247-PVC-Cu':{aislacion:'PVC',material:'Cu',k_icc:115,resistencias:[{s:1.5,r:15.91,x:.115},{s:2.5,r:9.55,x:.115},{s:4,r:5.92,x:.115},{s:6,r:3.95,x:.107},{s:10,r:2.29,x:.107},{s:16,r:1.48,x:.1},{s:25,r:.934,x:.1},{s:35,r:.663,x:.095},{s:50,r:.463,x:.091}],corrientes:{B1:{mono:[{s:1.5,i:15},{s:2.5,i:21},{s:4,i:28},{s:6,i:36},{s:10,i:50},{s:16,i:66},{s:25,i:88},{s:35,i:108},{s:50,i:131}],tri:[{s:1.5,i:14},{s:2.5,i:18},{s:4,i:25},{s:6,i:32},{s:10,i:44},{s:16,i:59},{s:25,i:77},{s:35,i:96},{s:50,i:117}]},C:null,E:null}},
@@ -231,7 +164,6 @@
     const k2_agrup=[{n:1,f:1},{n:2,f:.8},{n:3,f:.7},{n:4,f:.65},{n:5,f:.6},{n:6,f:.57},{n:7,f:.54},{n:8,f:.52},{n:9,f:.5}];
     const annexContent={"tab-formulas":`<h4 class="text-lg font-semibold mb-4">Fórmulas de Cálculo Principales</h4><div class="space-y-6"><div><h5 class="font-semibold text-md">1. Corriente de Carga (I<sub>carga</sub>)</h5><p class="text-sm text-gray-600 mt-1">Para circuitos trifásicos:</p><code class="block bg-gray-100 p-2 rounded-md mt-1">I_carga = P / (√3 * U * cos φ)</code><p class="text-sm text-gray-600 mt-2">Para circuitos monofásicos:</p><code class="block bg-gray-100 p-2 rounded-md mt-1">I_carga = P / (U * cos φ)</code></div><div><h5 class="font-semibold text-md">2. Caída de Tensión Porcentual (ΔU%)</h5><p class="text-sm text-gray-600 mt-1">La caída de tensión se calcula como:</p><code class="block bg-gray-100 p-2 rounded-md mt-1">ΔU = K * L * I_carga * (R * cos φ + X * sen φ)</code><p class="text-sm text-gray-600 mt-2">Donde K=2 para monofásico y K=√3 para trifásico. L en [km], R y X en [Ω/km]. Luego, el porcentaje es:</p><code class="block bg-gray-100 p-2 rounded-md mt-1">ΔU% = (ΔU / U) * 100</code></div><div><h5 class="font-semibold text-md">3. Corriente Admisible de Cortocircuito (I<sub>adm cc</sub>)</h5><p class="text-sm text-gray-600 mt-1">Calcula la Icc que el cable soporta térmicamente.</p><code class="block bg-gray-100 p-2 rounded-md mt-1">I_adm_cc = (k * S) / √t</code><p class="text-sm text-gray-600 mt-2">'k' es una constante del material, 'S' es la sección en [mm²], y 't' es el tiempo de la protección en [s].</p></div></div>`,"tab-k1":`<h4 class="text-lg font-semibold mb-4">Factor de Corrección por Temperatura (k1)</h4><p class="text-sm text-gray-600 mb-4">Ajusta la corriente admisible según la temperatura ambiente (Ref: 40°C en aire).</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><h5 class="font-semibold mb-2">Aislación PVC (70°C)</h5><table class="w-full text-sm text-left"><thead class="bg-gray-100"><tr><th class="p-2">Temp (°C)</th><th class="p-2">Factor (k1)</th></tr></thead><tbody>${k1_temp.PVC.map(row=>`<tr><td class="border p-2">${row.t}</td><td class="border p-2">${row.f}</td></tr>`).join('')}</tbody></table></div><div><h5 class="font-semibold mb-2">Aislación XLPE (90°C)</h5><table class="w-full text-sm text-left"><thead class="bg-gray-100"><tr><th class="p-2">Temp (°C)</th><th class="p-2">Factor (k1)</th></tr></thead><tbody>${k1_temp.XLPE.map(row=>`<tr><td class="border p-2">${row.t}</td><td class="border p-2">${row.f}</td></tr>`).join('')}</tbody></table></div></div>`,"tab-k2":`<h4 class="text-lg font-semibold mb-4">Factor de Corrección por Agrupamiento (k2)</h4><p class="text-sm text-gray-600 mb-4">Para cables en contacto, según la cantidad de circuitos.</p><table class="w-full md:w-1/2 text-sm text-left"><thead class="bg-gray-100"><tr><th class="p-2">Nº Circuitos</th><th class="p-2">Factor (k2)</th></tr></thead><tbody>${k2_agrup.map(row=>`<tr><td class="border p-2">${row.n}</td><td class="border p-2">${row.f.toFixed(2)}</td></tr>`).join('')}</tbody></table>`,"tab-kicc":`<h4 class="text-lg font-semibold mb-4">Constante 'k' para Cálculo de Icc</h4><p class="text-sm text-gray-600 mb-4">Depende del material del conductor y su aislación.</p><table class="w-full md:w-1/2 text-sm text-left"><thead class="bg-gray-100"><tr><th class="p-2">Material / Aislación</th><th class="p-2">Valor de 'k'</th></tr></thead><tbody><tr><td class="border p-2">Cobre / XLPE</td><td class="border p-2">143</td></tr><tr><td class="border p-2">Cobre / PVC</td><td class="border p-2">115</td></tr><tr><td class="border p-2">Aluminio / XLPE</td><td class="border p-2">94</td></tr><tr><td class="border p-2">Aluminio / PVC</td><td class="border p-2">76</td></tr></tbody></table>`,};
     
-    // --- APPLICATION LOGIC ---
     document.addEventListener('DOMContentLoaded', function() {
         let circuits = [];
 
@@ -245,15 +177,13 @@
         const tensionSelect = document.getElementById('tension');
         const tabContainer = document.getElementById('tab-container');
         const tabContent = document.getElementById('tab-content');
-        const verifyIccBtn = document.getElementById('verificar-icc');
-
+        
         addCircuitBtn.addEventListener('click', handleAddCircuit);
         clearListBtn.addEventListener('click', handleClearList);
         exportCsvBtn.addEventListener('click', handleExportCsv);
         tipoCableSelect.addEventListener('change', updateTendidoOptions);
         tensionSelect.addEventListener('change', updateCaidaTension);
         tabContainer.addEventListener('click', handleTabClick);
-        verifyIccBtn.addEventListener('click', handleVerifyIcc);
 
         function handleAddCircuit() {
             const resultDiv = document.getElementById('resultado-cable');
@@ -273,34 +203,9 @@
                 } else {
                     circuits.push(result);
                     displayImmediateResult(result);
-                    populateIccCalculator(result);
                     renderCircuitList();
                 }
             }, 500);
-        }
-
-        function handleVerifyIcc() {
-            const S = parseFloat(document.getElementById('seccionVerificar').value);
-            const k = parseFloat(document.getElementById('aislacionVerificar').dataset.k_icc);
-            const t = parseFloat(document.getElementById('tiempoActuacion').value);
-            const icc_user_kA = parseFloat(document.getElementById('icc').value);
-            const resultDiv = document.getElementById('resultado-icc');
-            const contentDiv = document.getElementById('content-resultado-icc');
-            
-            if (isNaN(S) || isNaN(k)) {
-                contentDiv.innerHTML = `<div class="bg-yellow-100 text-yellow-800 p-3 rounded-lg text-center">Calcule un cable en la Calculadora 1 primero.</div>`;
-                resultDiv.style.display = 'block';
-                return;
-            }
-
-            const I_adm_cc_A = (k * S) / Math.sqrt(t);
-            const I_adm_cc_kA = I_adm_cc_A / 1000;
-            const passes = I_adm_cc_kA >= icc_user_kA;
-            
-            contentDiv.innerHTML = `<div class="result-line"><span>Icc Admisible (I<sub>adm cc</sub>)</span><strong class="text-lg">${I_adm_cc_kA.toFixed(2)} kA</strong></div>
-                                  <div class="result-line"><span>Icc a Soportar (dato)</span><strong class="text-lg">${icc_user_kA.toFixed(2)} kA</strong></div>
-                                  <div class="mt-4 p-4 rounded-lg text-center font-bold text-xl ${passes ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${passes ? 'VERIFICA' : 'NO VERIFICA'}</div>`;
-            resultDiv.style.display = 'block';
         }
         
         function handleRemoveCircuit(index) {
@@ -315,8 +220,8 @@
         
         function handleExportCsv() {
             if (circuits.length === 0) return;
-            const headers = ['Nombre Circuito','Potencia (kW)','Tension (V)','FP','Longitud (m)','Tipo Cable','Tendido','Seccion (mm²)','I Carga (A)','I Adm (A)','Caida U (%)'];
-            const rows = circuits.map(c => [`"${c.userInput.nombre}"`,c.userInput.P_kW,c.userInput.U,c.userInput.cosphi,c.userInput.L_m,c.userInput.cableKey,c.userInput.tendidoKey,c.seccion,c.i_carga.toFixed(2),c.i_adm.toFixed(2),c.deltaU_perc.toFixed(2)]);
+            const headers = ['Nombre Circuito','Potencia (kW)','Tension (V)','FP','Longitud (m)','Tipo Cable','Tendido', 'Icc Proyecto (kA)', 'T Proteccion (s)', 'Seccion (mm²)','I Carga (A)','I Adm (A)', 'Icc Adm Cable (kA)', 'Caida U (%)'];
+            const rows = circuits.map(c => [`"${c.userInput.nombre}"`,c.userInput.P_kW,c.userInput.U,c.userInput.cosphi,c.userInput.L_m,c.userInput.cableKey,c.userInput.tendidoKey, c.userInput.icc_kA, c.userInput.tiempo_s, c.seccion, c.i_carga.toFixed(2),c.i_adm.toFixed(2), c.i_adm_cc.toFixed(2), c.deltaU_perc.toFixed(2)]);
             let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -343,7 +248,7 @@
                 card.querySelector('.data-icarga').textContent = `${i_carga.toFixed(2)} A`;
                 card.querySelector('.data-iadm').textContent = `${i_adm.toFixed(2)} A`;
                 card.querySelector('.data-delta-u').textContent = `${deltaU_perc.toFixed(2)}%`;
-                card.style.borderColor = deltaU_perc > userInput.deltaU_adm_perc ? '#ef4444' : '#22c55e';
+                card.style.borderColor = '#22c55e';
                 
                 card.querySelector('.remove-card').addEventListener('click', () => handleRemoveCircuit(index));
                 listaCircuitosEl.appendChild(card);
@@ -352,19 +257,78 @@
         
         function displayImmediateResult(result) {
             const contentDiv = document.getElementById('content-resultado-cable');
-            contentDiv.innerHTML = `<div class="result-line"><span>Corriente de Carga (I<sub>carga</sub>)</span><strong class="text-lg">${result.i_carga.toFixed(2)} A</strong></div>
-                                  <div class="result-line"><span>Corriente Admisible (I<sub>adm</sub>)</span><strong class="text-lg">${result.i_adm.toFixed(2)} A</strong></div>
-                                  <div class="result-line"><span>Caída de Tensión (ΔU)</span><strong class="text-lg ${result.deltaU_perc > result.userInput.deltaU_adm_perc ? 'text-red-600' : 'text-green-700'}">${result.deltaU_perc.toFixed(2)}%</strong></div>
-                                  <div class="p-2 mt-2 bg-blue-100 rounded-lg text-center"><span class="text-sm text-blue-900">Sección Calculada</span><p class="font-bold text-2xl text-blue-900">${result.seccion} mm²</p></div>`;
-        }
+            const checkOK = `<svg class="w-5 h-5 ok-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
 
-        function populateIccCalculator(result) {
-            const { seccion, userInput } = result;
-            const aislacionEl = document.getElementById('aislacionVerificar');
-            document.getElementById('seccionVerificar').value = seccion;
-            aislacionEl.value = cableData[userInput.cableKey].aislacion;
-            aislacionEl.dataset.k_icc = cableData[userInput.cableKey].k_icc;
-            document.getElementById('resultado-icc').style.display = 'none';
+            contentDiv.innerHTML = `
+                <div class="result-line"><span>1. Verificación Icc</span><div class="flex items-center gap-2"><strong>${result.i_adm_cc.toFixed(2)} kA ≥ ${result.userInput.icc_kA} kA</strong>${checkOK}</div></div>
+                <div class="result-line"><span>2. Verificación I<sub>carga</sub></span><div class="flex items-center gap-2"><strong>${result.i_adm.toFixed(2)} A ≥ ${result.i_carga.toFixed(2)} A</strong>${checkOK}</div></div>
+                <div class="result-line"><span>3. Verificación ΔU</span><div class="flex items-center gap-2"><strong>${result.deltaU_perc.toFixed(2)}% ≤ ${result.userInput.deltaU_adm_perc}%</strong>${checkOK}</div></div>
+                <div class="p-2 mt-2 bg-blue-100 rounded-lg text-center">
+                    <span class="text-sm text-blue-900">Sección Mínima Requerida</span>
+                    <p class="font-bold text-2xl text-blue-900">${result.seccion} mm²</p>
+                </div>`;
+        }
+        
+        function selectCable() {
+            const userInput = {
+                P_kW: parseFloat(document.getElementById('potencia').value), U: parseFloat(document.getElementById('tension').value), cosphi: parseFloat(document.getElementById('cosphi').value),
+                L_m: parseFloat(document.getElementById('longitud').value), cableKey: document.getElementById('tipoCable').value, tendidoKey: document.getElementById('tipoTendido').value,
+                temp: parseInt(document.getElementById('temperatura').value), numCircuitos: parseInt(document.getElementById('agrupamiento').value), deltaU_adm_perc: parseFloat(document.getElementById('caidaTensionAdm').value),
+                icc_kA: parseFloat(document.getElementById('icc').value), tiempo_s: parseFloat(document.getElementById('tiempoActuacion').value),
+                nombre: document.getElementById('nombreCircuito').value || `Circuito #${circuits.length + 1}`
+            };
+
+            if (Object.values(userInput).some(v => v === null || isNaN(v) && typeof v !== 'string')) {
+                 return { error: 'Por favor, complete todos los campos numéricos.' };
+            }
+            if (userInput.cosphi < 0 || userInput.cosphi > 1) {
+                return { error: 'El Factor de Potencia debe estar entre 0 y 1.' };
+            }
+            
+            const { P_kW, U, cosphi, L_m, cableKey, tendidoKey, temp, numCircuitos, deltaU_adm_perc, icc_kA, tiempo_s } = userInput;
+            const P_W = P_kW * 1000; const L_km = L_m / 1000; const tipoCircuito = U === 380 ? 'tri' : 'mono';
+            const data = cableData[cableKey];
+
+            if (!data || !data.corrientes[tendidoKey]) {
+                return { error: `No hay datos para la combinación (${cableKey} / ${tendidoKey}).` };
+            }
+            
+            const i_carga = tipoCircuito === 'tri' ? (P_W / (Math.sqrt(3) * U * cosphi)) : (P_W / (U * cosphi));
+            const k1 = getK1(data.aislacion, temp); const k2 = getK2(numCircuitos); const k_total = k1 * k2;
+            const k_icc = data.k_icc;
+            const seccionesDisponibles = data.corrientes[tendidoKey][tipoCircuito];
+
+            for (const seccionInfo of seccionesDisponibles) {
+                const S = seccionInfo.s;
+                
+                // 1. Verificación por Cortocircuito
+                const i_adm_cc = (k_icc * S) / Math.sqrt(tiempo_s) / 1000; // en kA
+                if (i_adm_cc < icc_kA) {
+                    continue; // Esta sección no soporta el Icc, pasar a la siguiente
+                }
+
+                // 2. Verificación por Corriente Admisible
+                const i_adm = seccionInfo.i * k_total;
+                if (i_adm < i_carga) {
+                    continue; // No soporta la corriente de carga, pasar a la siguiente
+                }
+                
+                // 3. Verificación por Caída de Tensión
+                const params = data.resistencias.find(r => r.s === S);
+                if (!params) continue;
+                
+                const sinphi = Math.sqrt(1 - Math.pow(cosphi, 2));
+                const k_voltDrop = tipoCircuito === 'tri' ? Math.sqrt(3) : 2;
+                const deltaU = k_voltDrop * L_km * i_carga * (params.r * cosphi + params.x * sinphi);
+                const deltaU_perc = (deltaU / U) * 100;
+                
+                if (deltaU_perc <= deltaU_adm_perc) {
+                    // ¡Éxito! Esta es la primera sección que cumple los 3 criterios
+                    return { userInput, i_carga, seccion: S, i_adm, i_adm_cc, deltaU, deltaU_perc, error: null };
+                }
+            }
+
+            return { error: 'No se encontró una sección de cable que cumpla los tres criterios (Icc, Icarga y ΔU). Revise los parámetros.' };
         }
 
         function getK1(aislacion, temp) {
@@ -378,52 +342,6 @@
             if (numCircuitos > 9) return 0.50;
             const factor = k2_agrup.find(f => f.n === numCircuitos);
             return factor ? factor.f : 1;
-        }
-        
-        function selectCable() {
-            const userInput = {
-                P_kW: parseFloat(document.getElementById('potencia').value), U: parseFloat(document.getElementById('tension').value), cosphi: parseFloat(document.getElementById('cosphi').value),
-                L_m: parseFloat(document.getElementById('longitud').value), cableKey: document.getElementById('tipoCable').value, tendidoKey: document.getElementById('tipoTendido').value,
-                temp: parseInt(document.getElementById('temperatura').value), numCircuitos: parseInt(document.getElementById('agrupamiento').value), deltaU_adm_perc: parseFloat(document.getElementById('caidaTensionAdm').value),
-                nombre: document.getElementById('nombreCircuito').value || `Circuito #${circuits.length + 1}`
-            };
-
-            if (Object.values(userInput).some(v => v === null || isNaN(v) && typeof v !== 'string')) {
-                 return { error: 'Por favor, complete todos los campos numéricos.' };
-            }
-            if (userInput.cosphi < 0 || userInput.cosphi > 1) {
-                return { error: 'El Factor de Potencia debe estar entre 0 y 1.' };
-            }
-            
-            const { P_kW, U, cosphi, L_m, cableKey, tendidoKey, temp, numCircuitos, deltaU_adm_perc } = userInput;
-            const P_W = P_kW * 1000; const L_km = L_m / 1000; const tipoCircuito = U === 380 ? 'tri' : 'mono';
-            const data = cableData[cableKey];
-
-            if (!data || !data.corrientes[tendidoKey]) {
-                return { error: `No hay datos para la combinación (${cableKey} / ${tendidoKey}).` };
-            }
-            
-            const I_carga = tipoCircuito === 'tri' ? (P_W / (Math.sqrt(3) * U * cosphi)) : (P_W / (U * cosphi));
-            const k1 = getK1(data.aislacion, temp); const k2 = getK2(numCircuitos); const k_total = k1 * k2;
-            const seccionesDisponibles = data.corrientes[tendidoKey][tipoCircuito];
-
-            for (const seccion of seccionesDisponibles) {
-                const I_adm = seccion.i * k_total;
-                if (I_adm >= I_carga) {
-                    const params = data.resistencias.find(r => r.s === seccion.s);
-                    if (!params) continue;
-                    
-                    const sinphi = Math.sqrt(1 - Math.pow(cosphi, 2));
-                    const k_voltDrop = tipoCircuito === 'tri' ? Math.sqrt(3) : 2;
-                    const deltaU = k_voltDrop * L_km * I_carga * (params.r * cosphi + params.x * sinphi);
-                    const deltaU_perc = (deltaU / U) * 100;
-                    
-                    if (deltaU_perc <= deltaU_adm_perc) {
-                        return { userInput, i_carga, seccion: seccion.s, i_adm, deltaU, deltaU_perc, error: null };
-                    }
-                }
-            }
-            return { error: 'No se encontró sección que cumpla ambos criterios. Revise los parámetros.' };
         }
 
         function updateTendidoOptions() {
